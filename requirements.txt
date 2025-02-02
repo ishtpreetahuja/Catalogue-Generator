@@ -1,0 +1,8 @@
+pandas
+jinja2
+weasyprint
+python-dotenv
+gspread
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
