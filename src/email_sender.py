@@ -6,6 +6,7 @@ from email import encoders
 from dotenv import load_dotenv
 import os
 
+
 # Load environment variables from .env file
 load_dotenv(dotenv_path="utils/.env")
 
@@ -39,3 +40,6 @@ def send_email(to_email, subject, body, attachment_path):
         server.starttls()
         server.login(EMAIL, PASSWORD)
         server.sendmail(EMAIL, to_email, msg.as_string())
+    
+    # Delete the PDF file
+    os.remove(attachment_path)

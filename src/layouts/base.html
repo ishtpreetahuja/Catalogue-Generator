@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catalogue</title>
+    <style>
+        @page {
+            margin: 0.5in;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        td {
+            height: 100px; /* Set a fixed height for table rows */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        thead {
+            display: table-header-group;
+        }
+        tbody {
+            display: table-row-group;
+        }
+        tr {
+            page-break-inside: avoid;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        h1, h3 {
+            margin: 0;
+            padding: 10px 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Khandelwal Trading Co.</h1>
+        <h3>{{ sub_head }}</h3>
+    </div>
+    {% block content %}{% endblock %}
+    <div class="terms-conditions">
+        <h3>Terms and Conditions</h3>
+        <p>1. All sales are final. No returns or exchanges.</p>
+        <p>2. Prices are subject to change without notice.</p>
+        <p>3. Payment is due within 30 days of invoice date.</p>
+    </div>
+</body>
+</html>

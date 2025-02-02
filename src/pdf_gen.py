@@ -1,7 +1,11 @@
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
-from src.email_sender import send_email
+# from src.email_sender import send_email
+import os
+
+def file_exists(path):
+    return os.path.isfile(path)
 
 def generator(body, to_email=None, subject=None):
     print(f"Generating PDF catalogue for input: {body}")
@@ -16,28 +20,30 @@ def generator(body, to_email=None, subject=None):
     print(f"Debug - Sample values in Primary Category: {df['Primary Category'].unique()}")
 
     # Detect the column based on the input (case insensitive)
-    column = None
-    for col in df.columns:
-        if body.lower() in df[col].str.lower().values:
-            column = col
-            break
+    # column = None
+    # for col in df.columns:
+    #     if body.lower() in df[col].str.lower().values:
+    #         column = col
+    #         break
 
-    if column is None:
-        print(f"No matching column found for input: '{body}'")
-        return False
+    # if column is None:
+    #     print(f"No matching column found for input: '{body}'")
+    #     return False
 
     # Filter rows based on the detected column (case insensitive)
-    filtered_df = df[df[column].str.lower() == body.lower()]
+    filtered_df = df[df["Primary Category"].str.lower() == body.lower()]
     print(f"Debug - Found {len(filtered_df)} matching rows")
 
     # Determine the template to use
-    if column == "Primary Category":
-        template_name = f"src/layouts/{body.lower().replace(' ', '')}.html"
-    else:
-        template_name = "src/layouts/defaultlayout.html"
+    # if column == "Primary Category":
+    #     template_name = f"src/layouts/{body.lower().replace(' ', '')}.html"
+    # else:
+    #     template_name = "src/layouts/defaultlayout.html"
+    template_name = "src/layouts/powertools.html"
 
     # Load Jinja2 template
     env = Environment(loader=FileSystemLoader("."))
+    env.filters['file_exists'] = file_exists  # Register the custom filter
     template = env.get_template(template_name)
 
     # Render template with filtered DataFrame data
@@ -47,7 +53,7 @@ def generator(body, to_email=None, subject=None):
     output_pdf_path = f"output_{body.lower().replace(' ', '_')}.pdf"
 
     # Convert to PDF
-    HTML(string=html_content).write_pdf(output_pdf_path)
+    HTML(string=html_content, base_url='.').write_pdf(output_pdf_path)
     print("PDF generated successfully!")
 
     # Send email if recipient details are provided
@@ -63,3 +69,6 @@ def generator(body, to_email=None, subject=None):
             return False
 
     return output_pdf_path
+
+if __name__ == '__main__':
+    generator("POWER TOOLS")
