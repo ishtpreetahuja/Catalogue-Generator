@@ -28,8 +28,8 @@ def check_email():
 
     mail.select("inbox")
 
-    # Search for unread emails with subject "Send catalogue"
-    result, data = mail.search(None, 'UNSEEN SUBJECT "Send catalogue"')
+    # Search for unread emails with subject "Send catalogue" (case insensitive)
+    result, data = mail.search(None, '(UNSEEN SUBJECT "Send catalogue" SUBJECT "send catalogue" SUBJECT "SEND CATALOGUE")')
     if result == "OK":
         mail_ids = data[0].split()
         print(f"Found {len(mail_ids)} new emails with subject 'Send catalogue'")
@@ -61,8 +61,8 @@ def check_email():
                     # Mark the email as read
                     mail.store(num, '+FLAGS', '\\Seen')
 
-    # Search for unread emails with subject "sync"
-    result, data = mail.search(None, 'UNSEEN SUBJECT "sync"')
+    # Search for unread emails with subject "sync" (case insensitive)
+    result, data = mail.search(None, '(UNSEEN SUBJECT "sync" SUBJECT "Sync" SUBJECT "SYNC")')
     if result == "OK":
         mail_ids = data[0].split()
         print(f"Found {len(mail_ids)} new emails with subject 'sync'")

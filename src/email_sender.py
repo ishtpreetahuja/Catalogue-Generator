@@ -6,23 +6,23 @@ from email import encoders
 from dotenv import load_dotenv
 import os
 
-
 # Load environment variables from .env file
 load_dotenv(dotenv_path="utils/.env")
 
 # Email account credentials
 EMAIL = os.getenv("RECEIVER-EMAIL")
 PASSWORD = os.getenv("RECEIVER-PASSWORD")
+TO_EMAIL = os.getenv("TO-EMAIL")
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-def send_email(to_email, subject, body, attachment_path):
+def send_email(subject, attachment_path):
     msg = MIMEMultipart()
     msg["From"] = EMAIL
-    msg["To"] = to_email
+    msg["To"] = TO_EMAIL
     msg["Subject"] = subject
     
-    msg.attach(MIMEText(body, "plain"))
+    msg.attach(MIMEText("Please find the requested catalogue attached.", "plain"))
 
     # Attach the PDF file
     with open(attachment_path, "rb") as attachment:
@@ -39,7 +39,7 @@ def send_email(to_email, subject, body, attachment_path):
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
         server.starttls()
         server.login(EMAIL, PASSWORD)
-        server.sendmail(EMAIL, to_email, msg.as_string())
+        server.sendmail(EMAIL, TO_EMAIL, msg.as_string())
     
     # Delete the PDF file
     os.remove(attachment_path)

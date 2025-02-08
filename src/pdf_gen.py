@@ -1,44 +1,31 @@
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
-# from src.email_sender import send_email
+from email_sender import send_email
 import os
 
 def file_exists(path):
     return os.path.isfile(path)
 
-def generator(body, to_email=None, subject=None):
-    print(f"Generating PDF catalogue for input: {body}")
-    
-    # Clean the input string
-    body = body.strip()
-    print(f"Debug - Cleaned input: '{body}'")
+def generator(primary_category=None, secondary_category=None, brand=None):
+    print(f"Generating PDF catalogue for: {primary_category}, {secondary_category}, {brand}")
 
     # Load data from a local CSV file
     df = pd.read_csv("utils/data.csv")
     print(f"Debug - Available columns: {df.columns.tolist()}")
-    print(f"Debug - Sample values in Primary Category: {df['Primary Category'].unique()}")
 
-    # Detect the column based on the input (case insensitive)
-    # column = None
-    # for col in df.columns:
-    #     if body.lower() in df[col].str.lower().values:
-    #         column = col
-    #         break
+    # Filter rows based on the inputs
+    filtered_df = df.copy()
+    if primary_category:
+        filtered_df = filtered_df[filtered_df["Primary Category"].str.lower() == primary_category.lower()]
+    if secondary_category:
+        filtered_df = filtered_df[filtered_df["Secondary Category"].str.lower() == secondary_category.lower()]
+    if brand:
+        filtered_df = filtered_df[filtered_df["Brand"].str.lower() == brand.lower()]
 
-    # if column is None:
-    #     print(f"No matching column found for input: '{body}'")
-    #     return False
-
-    # Filter rows based on the detected column (case insensitive)
-    filtered_df = df[df["Primary Category"].str.lower() == body.lower()]
     print(f"Debug - Found {len(filtered_df)} matching rows")
 
     # Determine the template to use
-    # if column == "Primary Category":
-    #     template_name = f"src/layouts/{body.lower().replace(' ', '')}.html"
-    # else:
-    #     template_name = "src/layouts/defaultlayout.html"
     template_name = "src/layouts/powertools.html"
 
     # Load Jinja2 template
@@ -47,28 +34,18 @@ def generator(body, to_email=None, subject=None):
     template = env.get_template(template_name)
 
     # Render template with filtered DataFrame data
-    html_content = template.render(data=filtered_df.to_dict(orient="records"), sub_head=body)
+    html_content = template.render(data=filtered_df.to_dict(orient="records"), sub_head=f"{primary_category or ''} - {secondary_category or ''} - {brand or ''}")
 
     # Define the output PDF path
-    output_pdf_path = f"output_{body.lower().replace(' ', '_')}.pdf"
+    output_pdf_path = f"output_{(primary_category or 'all').lower().replace(' ', '_')}_{(secondary_category or 'all').lower().replace(' ', '_')}_{(brand or 'all').lower().replace(' ', '_')}.pdf"
 
     # Convert to PDF
     HTML(string=html_content, base_url='.').write_pdf(output_pdf_path)
     print("PDF generated successfully!")
 
-    # Send email if recipient details are provided
-    if to_email and subject:
-        try:
-            send_email(to_email, f"REPLY TO {body}", 
-                       "Please find the requested catalogue attached.", 
-                       output_pdf_path)
-            print("Email sent successfully!")
-            return True
-        except Exception as e:
-            print(f"Failed to send email: {e}")
-            return False
-
-    return output_pdf_path
+    # # Send email
+    # send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
+    # print("Email sent successfully!")
 
 if __name__ == '__main__':
     generator("POWER TOOLS")

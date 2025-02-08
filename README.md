@@ -1,14 +1,18 @@
 # Catalogue Generator
 
-This project is an automated email-based catalogue generator. It listens for specific email subjects, generates a PDF catalogue based on the email content, and sends the generated PDF as an email attachment.
+A Streamlit-based web application that generates PDF catalogues for products based on selected categories and brands. The application supports data synchronization with Google Sheets and automated email delivery of generated catalogues.
 
 ## Features
 
-- Detects emails with specific subjects
-- Generates PDF catalogues based on email content
-- Sends the generated PDF as an email attachment
-- Supports multiple categories and brands
-
+- Web-based GUI using Streamlit
+- Generate PDF catalogues based on:
+  - Primary Category
+  - Secondary Category
+  - Brand
+- Sync product data from Google Sheets
+- Automatic email delivery of generated catalogues
+- Support for multiple categories and brands
+- Image handling for products and brand logos
 
 ## Setup
 
@@ -30,35 +34,46 @@ This project is an automated email-based catalogue generator. It listens for spe
     ```
 
 4. **Set up environment variables**:
-    Create a `.env` file in the [utils](http://_vscodecontentref_/3) directory with the following content:
+    Create a [.env](http://_vscodecontentref_/1) file in the [utils](http://_vscodecontentref_/2) directory with the following content:
     ```plaintext
     RECEIVER-EMAIL=your-email@gmail.com
     RECEIVER-PASSWORD=your-app-password
+    TO-EMAIL=recipient-email@gmail.com
     ```
 
 5. **Add your data**:
-    Place your data in the [data.csv](http://_vscodecontentref_/4) file. Ensure it has columns like "Brand", "Primary Category", "Secondary Category", etc.
+    - Place your data in the [data.csv](http://_vscodecontentref_/3) file
+    - Required columns: "SKU", "Brand", "Primary Category", "Secondary Category", "Price", "Technical Details"
 
 6. **Add your Google Sheets credentials**:
-    Place your Google Sheets credentials in the [credentials-gsheet.json](http://_vscodecontentref_/5) file.
+    Place your Google Sheets credentials in the [credentials-gsheet.json](http://_vscodecontentref_/4) file.
+
+7. **Add product and brand images**:
+    - Product images: Place in [items](http://_vscodecontentref_/5) with SKU as filename (e.g., `GWS600.jpg`)
+    - Brand logos: Place in [brands](http://_vscodecontentref_/6) with brand name as filename (e.g., `bosch.png`)
 
 ## Usage
 
-1. **Run the main script**:
+1. **Start the application**:
     ```sh
     python main.py
     ```
 
-2. **Send an email**:
-    - To generate a catalogue, send an email with the subject "Send catalogue" and the body containing the category or brand.
-    - To sync data, send an email with the subject "sync".
+2. **Using the web interface**:
+    - Select Primary Category from dropdown
+    - Select Secondary Category from dropdown
+    - Select Brand from dropdown
+    - Click "Generate PDF" to create and email the catalogue
+    - Click "Sync Data" to update local data from Google Sheets
+    - Click "Create New Entry" to reset selections
 
-## Example
+## Project Structure
 
-- **Email Subject**: Send catalogue
-- **Email Body**: Power Tools
-
-The script will generate a PDF catalogue for "Power Tools" and send it as an email attachment.
+- [input_gui.py](http://_vscodecontentref_/7): Streamlit web interface
+- [pdf_gen.py](http://_vscodecontentref_/8): PDF generation logic
+- [email_sender.py](http://_vscodecontentref_/9): Email functionality
+- [sync_local.py](http://_vscodecontentref_/10): Google Sheets synchronization
+- [layouts](http://_vscodecontentref_/11): HTML templates and assets
 
 ## Contributing
 

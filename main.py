@@ -1,7 +1,5 @@
-from src.email_trigger import check_email
-import time
+import os
 
 if __name__ == "__main__":
-    while True:
-        check_email()
-        time.sleep(5)
+    os.environ["PYTHONPATH"] = os.path.abspath("src")
+    os.system("streamlit run src/input_gui.py")

@@ -16,28 +16,30 @@
     </thead>
     <tbody>
         {% for item in chunk %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>
-                {% set image_path = 'src/layouts/photos/items/' + item.SKU|string|replace(' ', '') + '.jpg' %}
-                {% if image_path|file_exists %}
-                    <img src="{{ image_path }}" style="width: 100px; height: auto;">
-                {% else %}
-                    <div style='width:100px;height:100px;background:white;color:black;display:flex;align-items:center;justify-content:center;font-size:12px;'>
-                        IMAGE N/A
-                    </div>
-                {% endif %}
-            </td>
-            <td>
-                <img src="{{ 'src/layouts/photos/brands/' + item.Brand|string|replace(' ', '') + '.png' }}" 
-                     alt="{{ item.Brand }}" 
-                     style="width: 50px; height: auto;">
-            </td>
-            <td>{{ item["Secondary Category"] }}</td>
-            <td>{{ item["Technical Details"] }}</td>
-            <td>Repair Ability</td>
-            <td>{{ item.Price }}</td>
-        </tr>
+            {% if item %}  <!-- Only create row if item exists -->
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    {% set image_path = 'src/layouts/photos/items/' + item.SKU|string|replace(' ', '') + '.jpg' %}
+                    {% if image_path|file_exists %}
+                        <img src="{{ image_path }}" style="width: 100px; height: auto;">
+                    {% else %}
+                        <div style='width:100px;height:100px;background:white;color:black;display:flex;align-items:center;justify-content:center;font-size:12px;'>
+                            IMAGE N/A
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <img src="{{ 'src/layouts/photos/brands/' + item.Brand|string|replace(' ', '') + '.png' }}" 
+                         alt="{{ item.Brand }}" 
+                         style="width: 50px; height: auto;">
+                </td>
+                <td>{{ item["Secondary Category"] }}</td>
+                <td>{{ item["Technical Details"] }}</td>
+                <td>{{ 'Repair Ability' }}</td>
+                <td>{{ item.Price }}</td>
+            </tr>
+            {% endif %}
         {% endfor %}
     </tbody>
 </table>
