@@ -12,6 +12,11 @@ primary_categories = df["Primary Category"].unique().tolist()
 secondary_categories = df["Secondary Category"].unique().tolist()
 brands = df["Brand"].unique().tolist()
 
+def clear_text(): # this is the function you define (def is a Python keyword and is short for 'define')
+  st.session_state["primary_category"] = ''  # add "text" as a key using the square brackets notation and set it to have the value ''
+  st.session_state["secondary_category"] = ''  # add "text" as a key using the square brackets notation and set it to have the value ''
+  st.session_state["brand"] = ''  # add "text" as a key using the square brackets notation and set it to have the value ''
+
 def main():
     # Initialize session state for input values
     if 'reset_inputs' not in st.session_state:
@@ -35,20 +40,18 @@ def main():
         with st.spinner('Generating PDF...'):
             generator(primary_category, secondary_category, brand)
             st.success("PDF generated successfully and email sent!")
-            time.sleep(2)
+            time.sleep(5)
+            clear_text()
             st.rerun()
 
     if st.button("Sync Data"):
         with st.spinner('Syncing data...'):
             syncing()
             st.success("Data synced successfully!")
-            time.sleep(2)
+            time.sleep(5)
             st.rerun()
 
-    # Ask if the user wants to create a new entry
-    if st.button("Create New Entry"):
-        st.session_state.reset_inputs = True
-        st.rerun()
+    st.button("Create New Entry", on_click=clear_text)
 
 if __name__ == "__main__":
     main()

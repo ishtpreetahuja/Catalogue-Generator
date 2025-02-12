@@ -5,21 +5,24 @@
     <style>
         @page {
             margin: 0.5in;
+            @top-center {
+                content: element(header);
+            }
         }
         body {
-            margin: 0;
+            margin: 50px 0 0 0; /* Add margin to the top to ensure header is not cut off */
             padding: 0;
             font-family: Arial, sans-serif;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 50px; /* Add margin to ensure table starts below the header */
         }
         th, td {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
+            text-align: center; /* Center align text in table cells */
         }
         td {
             height: 100px; /* Set a fixed height for table rows */
@@ -45,17 +48,43 @@
             padding: 10px 0;
         }
         .header {
+            position: running(header);
             text-align: center;
+            margin-top: 50px;
             margin-bottom: 20px;
+            width: 100%;
+            background-color: #f8f8f8;
+            padding: 15px 0;
+            border-bottom: 2px solid #333;
+        }
+        .header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #333;
+        }
+        .header h2 {
+            margin: 5px 0 0 0;
+            font-size: 18px;
+            color: #666;
+        }
+        .terms-conditions {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Khandelwal Trading Co.</h1>
-        <h3>{{ sub_head }}</h3>
+        <h2>{{ sub_head }}</h2>
     </div>
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
     <div class="terms-conditions">
         <h3>Terms and Conditions</h3>
         <p>1. All sales are final. No returns or exchanges.</p>

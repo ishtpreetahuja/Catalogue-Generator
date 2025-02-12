@@ -25,6 +25,10 @@ def generator(primary_category=None, secondary_category=None, brand=None):
 
     print(f"Debug - Found {len(filtered_df)} matching rows")
 
+    # Add serial number column
+    filtered_df.reset_index(drop=True, inplace=True)
+    filtered_df['sno'] = filtered_df.index + 1
+
     # Determine the template to use
     template_name = "src/layouts/powertools.html"
 
@@ -33,19 +37,23 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     env.filters['file_exists'] = file_exists  # Register the custom filter
     template = env.get_template(template_name)
 
+    # Convert "Price" column to int
+    if "Price" in filtered_df.columns:
+        filtered_df["Price"] = filtered_df["Price"].astype(int)
+    
     # Render template with filtered DataFrame data
-    html_content = template.render(data=filtered_df.to_dict(orient="records"), sub_head=f"{primary_category or ''} - {secondary_category or ''} - {brand or ''}")
+    html_content = template.render(data=filtered_df.to_dict(orient="records"), sub_head=f"{primary_category or ''} {secondary_category or ''}  {brand or ''}")
 
     # Define the output PDF path
-    output_pdf_path = f"output_{(primary_category or 'all').lower().replace(' ', '_')}_{(secondary_category or 'all').lower().replace(' ', '_')}_{(brand or 'all').lower().replace(' ', '_')}.pdf"
+    output_pdf_path = f"output.pdf"
 
     # Convert to PDF
     HTML(string=html_content, base_url='.').write_pdf(output_pdf_path)
     print("PDF generated successfully!")
 
-    # # Send email
-    # send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
-    # print("Email sent successfully!")
+    # Send email
+    send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
+    print("Email sent successfully!")
 
 if __name__ == '__main__':
     generator("POWER TOOLS")

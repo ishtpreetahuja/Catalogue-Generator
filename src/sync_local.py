@@ -34,3 +34,6 @@ def syncing():
     df.to_csv('utils/data.csv', index=False)
     
     print("Sync successful")
+
+if __name__ == "__main__":
+    syncing()
