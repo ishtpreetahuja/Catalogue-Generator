@@ -1,9 +1,8 @@
 {% extends "src/layouts/base.html" %}
 
 {% block content %}
-<!-- <h1>Khandelwal Trading Co.</h1> -->
 {% for chunk in data|batch(7, '') %}
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>S.no</th>
@@ -18,15 +17,15 @@
     </thead>
     <tbody>
         {% for item in chunk %}
-            {% if item %}  <!-- Only create row if item exists -->
+            {% if item %}
             <tr>
                 <td>{{ item.sno }}</td>
                 <td>
                     {% set image_path = 'src/layouts/photos/items/' + item.SKU|string|replace(' ', '') + '.jpg' %}
                     {% if image_path|file_exists %}
-                        <img src="{{ image_path }}" style="width: 100px; height: auto;">
-                   </td> {% else %}
-                        <div style='width:100px;height:100px;background:white;color:black;display:flex;align-items:center;justify-content:center;font-size:12px;'>
+                        <img src="{{ image_path }}" style="width: 100px; height: auto; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    {% else %}
+                        <div style='width:100px;height:100px;background:#fffef2;color:#333;display:flex;align-items:center;justify-content:center;font-size:12px;border:1px dashed #ffd700;border-radius:5px;'>
                             IMAGE N/A
                         </div>
                     {% endif %}
@@ -37,20 +36,18 @@
                          style="width: 50px; height: auto;">
                 </td>
                 <td>{{ item["SKU"] }}</td>
-             </td>   <td>{{ item.Power }}</td>
+                <td>{{ item.Power }}</td>
                 <td>{{ item.Capacity }}</td>
-                {% set service_style = '' %}
-                {% if item.Service == 'Very High' %}
-                    {% set service_style = 'color: #00B341; background-color: #E6FFE6;' %}
-                {% elif item.Service == 'High' %}
-                    {% set service_style = 'color: #FFB800; background-color: #FFF9E6;' %}
-                {% elif item.Service == 'Medium' %}
-                    {% set service_style = 'color: #FF6B00; background-color: #FFF1E6;' %}
-                {% else %}
-                    {% set service_style = 'color: #FF0000; background-color: #FFE6E6;' %}
-                {% endif %}
-                <td style="{{ service_style }}">{{ item.Service }}</td>
-                <td>&#8377; {{ item.Price }}</td>
+                <!-- <td> -->
+                    {% if item.Service == 'High' %}
+                        <td style="background-color: #d4edda; color: #008502;">High</td>
+                    {% elif item.Service == 'Medium' %}
+                        <td style="background-color: #fff3cd; color: #856404;">Medium</td>
+                    {% else %}
+                        <td style="background-color: #f8d7da; color: #721c24;">Low</td>
+                    {% endif %}
+                <!-- </td> -->
+                <td style="font-weight: bold;">₹ {{ "{:,}".format(item.Price|int) }}</td>
             </tr>
             {% endif %}
         {% endfor %}

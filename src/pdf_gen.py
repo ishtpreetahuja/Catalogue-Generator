@@ -45,15 +45,20 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     html_content = template.render(data=filtered_df.to_dict(orient="records"), sub_head=f"{primary_category or ''} {secondary_category or ''}  {brand or ''}")
 
     # Define the output PDF path
-    output_pdf_path = f"output.pdf"
+    primary_filename = primary_category.lower().strip().replace(" ", "-") if primary_category else "catalogue"
+    filename = primary_filename
+    if brand:
+        brand_filename = brand.lower().strip().replace(" ", "-")
+        filename = f"{primary_filename}_{brand_filename}"
+    output_pdf_path = f"{filename}.pdf"
 
     # Convert to PDF
     HTML(string=html_content, base_url='.').write_pdf(output_pdf_path)
     print("PDF generated successfully!")
 
     # Send email
-    send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
-    print("Email sent successfully!")
+    # send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
+    # print("Email sent successfully!")
 
 if __name__ == '__main__':
-    generator("POWER TOOLS")
+    generator("POWER TOOLS", brand="BOSCH")
