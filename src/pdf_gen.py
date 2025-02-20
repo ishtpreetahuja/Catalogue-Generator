@@ -29,8 +29,11 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     filtered_df.reset_index(drop=True, inplace=True)
     filtered_df['sno'] = filtered_df.index + 1
 
-    # Determine the template to use
-    template_name = "src/layouts/powertools.html"
+    # Determine the template to use based on the primary category
+    if primary_category:
+        template_name = f"src/layouts/{primary_category.lower().replace(' ', '')}.html"
+    else:
+        template_name = "src/layouts/powertools.html"
 
     # Load Jinja2 template
     env = Environment(loader=FileSystemLoader("."))
@@ -47,9 +50,12 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     # Define the output PDF path
     primary_filename = primary_category.lower().strip().replace(" ", "-") if primary_category else "catalogue"
     filename = primary_filename
+    if secondary_category:
+        secondary_filename = secondary_category.lower().strip().replace(" ", "-")
+        filename = f"{primary_filename}_{secondary_filename}"
     if brand:
         brand_filename = brand.lower().strip().replace(" ", "-")
-        filename = f"{primary_filename}_{brand_filename}"
+        filename = f"{filename}_{brand_filename}"
     output_pdf_path = f"{filename}.pdf"
 
     # Convert to PDF
@@ -57,8 +63,8 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     print("PDF generated successfully!")
 
     # Send email
-    # send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
-    # print("Email sent successfully!")
+    send_email(subject=f"Catalogue for {primary_category or 'All'} - {secondary_category or 'All'} - {brand or 'All'}", attachment_path=output_pdf_path)
+    print("Email sent successfully!")
 
 if __name__ == '__main__':
-    generator("POWER TOOLS", brand="BOSCH")
+    generator("Spare Parts", "ASM04-100A")
