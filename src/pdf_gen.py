@@ -32,6 +32,9 @@ def generator(primary_category=None, secondary_category=None, brand=None):
     # Determine the template to use based on the primary category
     if primary_category:
         template_name = f"src/layouts/{primary_category.lower().replace(' ', '')}.html"
+        if not file_exists(template_name):
+            print(f"Debug - Template {template_name} not found. Reverting to default template.")
+            template_name = "src/layouts/powertools.html"
     else:
         template_name = "src/layouts/powertools.html"
 

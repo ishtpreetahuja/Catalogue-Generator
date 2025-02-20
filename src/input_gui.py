@@ -41,7 +41,6 @@ def main():
             generator(primary_category, secondary_category, brand)
             st.success("PDF generated successfully and email sent!")
             time.sleep(5)
-            clear_text()
             st.rerun()
 
     if st.button("Sync Data"):
