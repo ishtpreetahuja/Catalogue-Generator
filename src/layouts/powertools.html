@@ -20,7 +20,8 @@
             {% if item %}
             <tr>
                 <td>{{ item.sno }}</td>
-                <td>
+                <!-- Image cell with white background -->
+                <td style="background-color: white !important;">
                     {% set image_path = 'src/layouts/photos/items/' + item.SKU|string|replace(' ', '') + '.jpg' %}
                     {% if image_path|file_exists %}
                         <img src="{{ image_path }}" style="width: 100px; height: auto; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -30,23 +31,25 @@
                         </div>
                     {% endif %}
                 </td>
-                <td>
+                <!-- Brand cell with white background -->
+                <td style="background-color: white !important;">
                     <img src="{{ 'src/layouts/photos/brands/' + item.Brand|string|replace(' ', '') + '.png' }}" 
                          alt="{{ item.Brand }}" 
                          style="width: 50px; height: auto;">
                 </td>
+                <!-- Regular transparent cells for model, power, and capacity -->
                 <td>{{ item["SKU"] }}</td>
                 <td>{{ item.Power }}</td>
                 <td>{{ item.Capacity }}</td>
-                <!-- <td> -->
-                    {% if item.Service == 'High' %}
-                        <td style="background-color: #d4edda; color: #008502;">High</td>
-                    {% elif item.Service == 'Medium' %}
-                        <td style="background-color: #fff3cd; color: #856404;">Medium</td>
-                    {% else %}
-                        <td style="background-color: #f8d7da; color: #721c24;">Low</td>
-                    {% endif %}
-                <!-- </td> -->
+                <!-- Service cell with colored background -->
+                {% if item.Service == 'High' %}
+                    <td style="background-color: rgba(212, 237, 218, 0.75) !important; color: #008502;">High</td>
+                {% elif item.Service == 'Medium' %}
+                    <td style="background-color: rgba(255, 243, 205, 0.75) !important; color: #856404;">Medium</td>
+                {% else %}
+                    <td style="background-color: rgba(248, 215, 218, 0.75) !important; color: #721c24;">Low</td>
+                {% endif %}
+                <!-- Regular transparent cell for price -->
                 <td style="font-weight: bold;">₹ {{ "{:,}".format(item.Price|int) }}</td>
             </tr>
             {% endif %}

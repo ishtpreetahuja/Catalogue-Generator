@@ -4,6 +4,12 @@ from pdf_gen import generator
 from sync_local import syncing
 import time
 
+# Set page title and favicon
+st.set_page_config(
+    page_title="Catalogue Generator",
+    page_icon="📊"
+)
+
 # Load data from CSV
 df = pd.read_csv("utils/data.csv")
 
